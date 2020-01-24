@@ -36,11 +36,12 @@ class _MyAppState extends State<MyApp> {
     return new MaterialApp(
       theme: new ThemeData(
         primarySwatch: Colors.blue,
-        buttonColor: Colors.blueAccent,
+        buttonColor: Colors.blue,
       ),
       home: new Scaffold(
         appBar: new AppBar(
           title: new Text("OCR"), //Todo center it
+          centerTitle: true,
         ),
         body: _getOcrScreen(context),
       ),

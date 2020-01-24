@@ -17,7 +17,7 @@ class MainActivity extends StatelessWidget {
 class UserFilterDemo extends StatefulWidget {
   UserFilterDemo() : super();
 
-  final String title = "ScanIt";  //Todo center
+  final String title = "ScanIt";
 
   @override
   UserFilterDemoState createState() => UserFilterDemoState();
@@ -60,6 +60,7 @@ class UserFilterDemoState extends State<UserFilterDemo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
@@ -121,6 +122,7 @@ class UserFilterDemoState extends State<UserFilterDemo> {
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Add",
+        backgroundColor: Colors.pinkAccent,
         child: Icon(Icons.add),
         onPressed: () {
           print("Clicked");
