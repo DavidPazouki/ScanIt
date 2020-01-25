@@ -12,13 +12,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
 
-  int _cameraOcr = FlutterMobileVision.CAMERA_BACK;
-  bool _autoFocusOcr = true;
+  static int _cameraOcr = FlutterMobileVision.CAMERA_BACK;
+  static bool _autoFocusOcr = true;
   bool _torchOcr = false;
   bool _multipleOcr = false;
-  bool _waitTapOcr = false;
+  static bool _waitTapOcr = true;
   bool _showTextOcr = true;
-  Size _previewOcr;
+  static Size _previewOcr = FlutterMobileVision.getPreviewSizes(FlutterMobileVision.CAMERA_BACK).elementAt(0);
   List<OcrText> _textsOcr = [];
 
 
@@ -49,152 +49,25 @@ class _MyAppState extends State<MyApp> {
   }
 
   ///
-  /// Scan formats
-  ///
-  List<DropdownMenuItem<int>> _getFormats() {
-    List<DropdownMenuItem<int>> formatItems = [];
-
-    Barcode.mapFormat.forEach((key, value) {
-      formatItems.add(
-        new DropdownMenuItem(
-          child: new Text(value),
-          value: key,
-        ),
-      );
-    });
-
-    return formatItems;
-  }
-
-  ///
-  /// Camera list
-  ///
-  List<DropdownMenuItem<int>> _getCameras() {
-    List<DropdownMenuItem<int>> cameraItems = [];
-
-    cameraItems.add(new DropdownMenuItem(
-      child: new Text('BACK'),
-      value: FlutterMobileVision.CAMERA_BACK,
-    ));
-
-    cameraItems.add(new DropdownMenuItem(
-      child: new Text('FRONT'),
-      value: FlutterMobileVision.CAMERA_FRONT,
-    ));
-
-    return cameraItems;
-  }
-
-  ///
-  /// Preview sizes list
-  ///
-  List<DropdownMenuItem<Size>> _getPreviewSizes(int facing) {
-    List<DropdownMenuItem<Size>> previewItems = [];
-
-    List<Size> sizes = FlutterMobileVision.getPreviewSizes(facing);
-
-    if (sizes != null) {
-      sizes.forEach((size) {
-        previewItems.add(
-          new DropdownMenuItem(
-            child: new Text(size.toString()),
-            value: size,
-          ),
-        );
-      });
-    } else {
-      previewItems.add(
-        new DropdownMenuItem(
-          child: new Text('Empty'),
-          value: null,
-        ),
-      );
-    }
-
-    return previewItems;
-  }
-
-  ///
   /// OCR Screen
   ///
   Widget _getOcrScreen(BuildContext context) {
     List<Widget> items = [];
-
-    items.add(new Padding(
-      padding: const EdgeInsets.only(
-        top: 8.0,
-        left: 18.0,
-        right: 18.0,
-      ),
-      child: const Text('Camera:'),
-    ));
-
-    items.add(new Padding(
-      padding: const EdgeInsets.only(
-        left: 18.0,
-        right: 18.0,
-      ),
-      child: new DropdownButton(
-        items: _getCameras(),
-        onChanged: (value) {
-          _previewOcr = null;
-          setState(() => _cameraOcr = value);
-        },
-        value: _cameraOcr,
-      ),
-    ));
-
-    items.add(new Padding(
-      padding: const EdgeInsets.only(
-        top: 8.0,
-        left: 18.0,
-        right: 18.0,
-      ),
-      child: const Text('Preview size:'),
-    ));
-
-    items.add(new Padding(
-      padding: const EdgeInsets.only(
-        left: 18.0,
-        right: 18.0,
-      ),
-      child: new DropdownButton(
-        items: _getPreviewSizes(_cameraOcr),
-        onChanged: (value) {
-          setState(() => _previewOcr = value);
-        },
-        value: _previewOcr,
-      ),
-    ));
-
-    items.add(new SwitchListTile(
-      title: const Text('Auto focus:'),
-      value: _autoFocusOcr,
-      onChanged: (value) => setState(() => _autoFocusOcr = value),
-    ));
-
-    items.add(new SwitchListTile(
-      title: const Text('Torch:'),
-      value: _torchOcr,
-      onChanged: (value) => setState(() => _torchOcr = value),
-    ));
 
     items.add(new SwitchListTile(
       title: const Text('Return all texts:'),
       value: _multipleOcr,
       onChanged: (value) => setState(() => _multipleOcr = value),
     ));
-
-    items.add(new SwitchListTile(
-      title: const Text('Capture when tap screen:'),
-      value: _waitTapOcr,
-      onChanged: (value) => setState(() => _waitTapOcr = value),
-    ));
-
     items.add(new SwitchListTile(
       title: const Text('Show text:'),
       value: _showTextOcr,
       onChanged: (value) => setState(() => _showTextOcr = value),
+    ));
+    items.add(new SwitchListTile(
+      title: const Text('Torch:'),
+      value: _torchOcr,
+      onChanged: (value) => setState(() => _torchOcr = value),
     ));
 
     items.add(
@@ -211,7 +84,7 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
- /*   items.addAll(
+   items.addAll(
       ListTile.divideTiles(
         context: context,
         tiles: _textsOcr
@@ -222,7 +95,7 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-     */
+
 
     return new ListView(
       padding: const EdgeInsets.only(
@@ -246,12 +119,9 @@ class _MyAppState extends State<MyApp> {
         showText: _showTextOcr,
         preview: _previewOcr,
         camera: _cameraOcr,
-        fps: 2.0,
+        fps: 10.0,
       );
-      print("before for loop");
-      for(int i = 0; i < texts.length; i++) {
-        print(texts.toString());
-      }
+
     } on Exception {
       texts.add(new OcrText('Failed to recognize text.'));
     }
@@ -262,7 +132,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-/*
+
 ///
 /// OcrTextWidget
 ///
@@ -281,11 +151,11 @@ class OcrTextWidget extends StatelessWidget {
       trailing: const Icon(Icons.arrow_forward),
       onTap: () => Navigator.of(context).push(
         new MaterialPageRoute(
-          builder: (context) => new UserFilterDemo(),
+          builder: (context) => new OcrTextDetail(ocrText),
         ),
       ),
     );
   }
 }
 
- */
+

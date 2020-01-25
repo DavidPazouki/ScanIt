@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
 
-
 class OcrTextDetail extends StatefulWidget {
   final OcrText ocrText;
 
@@ -12,12 +11,9 @@ class OcrTextDetail extends StatefulWidget {
 }
 
 class _OcrTextDetailState extends State<OcrTextDetail> {
-
-
   @override
   Widget build(BuildContext context) {
-
-    print("ATENTION now it is in ocr_text_detail");
+    print("ocr_text_detail started");
 
     return new Scaffold(
       appBar: new AppBar(
@@ -26,31 +22,28 @@ class _OcrTextDetailState extends State<OcrTextDetail> {
       body: new ListView(
         children: <Widget>[
           new ListTile(
-            title: new Text(widget.ocrText.value),
-            subtitle: const Text('Value'),
+            subtitle: new TextFormField(),
+            title: const Text('Heading'),
           ),
           new ListTile(
-            title: new Text(widget.ocrText.language),
-            subtitle: const Text('Language'),
+            subtitle: new TextFormField(
+                initialValue: widget.ocrText.value, maxLines: 15),
+            title: const Text('Text'),
           ),
           new ListTile(
-            title: new Text(widget.ocrText.top.toString()),
-            subtitle: const Text('Top'),
+            subtitle: new Text(widget.ocrText.language),
+            title: const Text('Language'),
           ),
-          new ListTile(
-            title: new Text(widget.ocrText.bottom.toString()),
-            subtitle: const Text('Bottom'),
-          ),
-          new ListTile(
-            title: new Text(widget.ocrText.left.toString()),
-            subtitle: const Text('Left'),
-          ),
-          new ListTile(
-            title: new Text(widget.ocrText.right.toString()),
-            subtitle: const Text('Right'),
-          ),
+          new RaisedButton(
+            onPressed: _save(),
+            child: new Text('SAVE'),
+          )
         ],
       ),
     );
+  }
+
+  _save() {
+    print('saved');
   }
 }
