@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Entry> data;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +39,7 @@ class _HomePageState extends State<HomePage> {
                         title: Text(item.heading),
                         subtitle: Text(item.text),
                         onTap: () => share(context, item),
+                        onLongPress: () => {remove(item)},
                       ),
                     );
                   },
@@ -67,11 +70,25 @@ class _HomePageState extends State<HomePage> {
         subject: alligator.text,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
+
+  remove(item) async {
+    print('remove');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter') ?? 0);
+    for (int i = 1; i <= counter; i++) {
+      if (prefs.getString('$i text') == item.text) {
+        prefs.remove('$i heading');
+        prefs.remove('$i text');
+        break;
+      }
+    }
+    setState(() {});
+  }
 }
 
 class Services {
   static Future<List<Entry>> getEntries() async {
-    List<Entry> entries = new List<Entry>();
+    List<Entry> entries = List<Entry>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int counter = (prefs.getInt('counter') ?? 0);
     for (int i = 1; i <= counter; i++) {
