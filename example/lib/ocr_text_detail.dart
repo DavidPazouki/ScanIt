@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OcrTextDetail extends StatefulWidget {
   final OcrText ocrText;
@@ -11,10 +12,28 @@ class OcrTextDetail extends StatefulWidget {
 }
 
 class _OcrTextDetailState extends State<OcrTextDetail> {
+  TextEditingController textController;
+  TextEditingController headingController;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    textController.dispose();
+    headingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    textController =
+        TextEditingController(text: widget.ocrText.value.toString());
+    headingController = TextEditingController(text: '');
+  }
+
   @override
   Widget build(BuildContext context) {
     print("ocr_text_detail started");
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Face Details'),
@@ -22,20 +41,22 @@ class _OcrTextDetailState extends State<OcrTextDetail> {
       body: new ListView(
         children: <Widget>[
           new ListTile(
-            subtitle: new TextFormField(),
+            subtitle: new TextFormField(
+              controller: headingController,
+            ),
             title: const Text('Heading'),
           ),
           new ListTile(
             subtitle: new TextFormField(
-                initialValue: widget.ocrText.value, maxLines: 15),
+              maxLines: 20,
+              controller: textController,
+            ),
             title: const Text('Text'),
           ),
-          new ListTile(
-            subtitle: new Text(widget.ocrText.language),
-            title: const Text('Language'),
-          ),
           new RaisedButton(
-            onPressed: _save(),
+            onPressed: () async {
+              _save();
+            },
             child: new Text('SAVE'),
           )
         ],
@@ -43,7 +64,16 @@ class _OcrTextDetailState extends State<OcrTextDetail> {
     );
   }
 
-  _save() {
-    print('saved');
+  Future<Null> _save() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter') ?? 0) + 1;
+    List<String> list = new List<String>();
+    list.add(headingController.text.toString());
+    list.add(textController.text.toString());
+    print('$list');
+    await prefs.setStringList(counter.toString(), list);
+    await prefs.setInt('counter', counter);
+    print('Saved on position $counter ');
+    Navigator.pop(context);
   }
 }

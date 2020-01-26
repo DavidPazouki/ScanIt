@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
-import 'package:flutter_mobile_vision_example/main.dart';
 import './ocr_text_detail.dart';
 
 class MyApp extends StatefulWidget {
@@ -10,15 +9,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
-  static int _cameraOcr = FlutterMobileVision.CAMERA_BACK;
-  static bool _autoFocusOcr = true;
   bool _torchOcr = false;
-  bool _multipleOcr = false;
-  static bool _waitTapOcr = true;
+  bool _multipleOcr = true;
   bool _showTextOcr = true;
-  static Size _previewOcr = FlutterMobileVision.getPreviewSizes(FlutterMobileVision.CAMERA_BACK).elementAt(0);
   List<OcrText> _textsOcr = [];
 
 
@@ -26,9 +19,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    FlutterMobileVision.start().then((previewSizes) => setState(() {
-          _previewOcr = previewSizes[_cameraOcr].first;
-        }));
+    FlutterMobileVision.start();
   }
 
   @override
@@ -113,12 +104,12 @@ class _MyAppState extends State<MyApp> {
     try {
       texts = await FlutterMobileVision.read(
         flash: _torchOcr,
-        autoFocus: _autoFocusOcr,
+        autoFocus: true,
         multiple: _multipleOcr,
-        waitTap: _waitTapOcr,
+        waitTap: true,
         showText: _showTextOcr,
-        preview: _previewOcr,
-        camera: _cameraOcr,
+        preview: FlutterMobileVision.getPreviewSizes(FlutterMobileVision.CAMERA_BACK).elementAt(0),
+        camera: FlutterMobileVision.CAMERA_BACK,
         fps: 10.0,
       );
 
