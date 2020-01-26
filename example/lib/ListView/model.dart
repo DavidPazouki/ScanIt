@@ -1,9 +1,8 @@
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-class Alligator{
-  final String name;
-  final String description;
+class Entry{
+  final String heading;
+  final String text;
 
-  Alligator({@required this.name, @required this.description});
+  Entry({@required this.heading, @required this.text});
 }

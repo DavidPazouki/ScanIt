@@ -71,7 +71,8 @@ class _OcrTextDetailState extends State<OcrTextDetail> {
     list.add(headingController.text.toString());
     list.add(textController.text.toString());
     print('$list');
-    await prefs.setStringList(counter.toString(), list);
+    await prefs.setString('$counter heading', headingController.text.toString());
+    await prefs.setString('$counter text', textController.text.toString());
     await prefs.setInt('counter', counter);
     print('Saved on position $counter ');
     Navigator.pop(context);
