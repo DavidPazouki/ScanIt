@@ -12,8 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Entry> data;
-
   @override
   void initState() {
     super.initState();
@@ -34,12 +32,30 @@ class _HomePageState extends State<HomePage> {
                   itemCount: snapshot.data.length,
                   itemBuilder: (_, int position) {
                     final item = snapshot.data[position];
+                    PopupMenuItem(
+                      value: item,
+                      child: Text("Delete"),
+                    );
                     return Card(
                       child: ListTile(
                         title: Text(item.heading),
                         subtitle: Text(item.text),
-                        onTap: () => share(context, item),
-                        onLongPress: () => {remove(item)},
+                        //onTap: () => share(context, item),
+                        //onLongPress: () => {remove(item)},
+                        trailing: PopupMenuButton(
+                          onSelected: _onSelected,
+                          icon: Icon(Icons.menu),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: {2, item},
+                              child: Text("Share"),
+                            ),
+                            PopupMenuItem(
+                              value: {1, item},
+                              child: Text("Delete"),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -63,11 +79,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  share(BuildContext context, Entry alligator) {
+  share(BuildContext context, Entry entry) {
     final RenderBox box = context.findRenderObject();
-
-    Share.share("${alligator.heading}:\n${alligator.text}",
-        subject: alligator.text,
+    Share.share("${entry.heading}:\n${entry.text}",
+        subject: entry.text,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -83,6 +98,14 @@ class _HomePageState extends State<HomePage> {
       }
     }
     setState(() {});
+  }
+
+  void _onSelected(Set value) {
+    if (value.elementAt(0) == 1) {
+      remove(value.elementAt(1));
+    } else {
+      share(context, value.elementAt(1));
+    }
   }
 }
 
