@@ -44,7 +44,7 @@ class _OcrTextDetailState extends State<OcrTextDetail> {
             subtitle: new TextFormField(
               controller: headingController,
             ),
-            title: const Text('Heading'),
+            title: const Text('Title'),
           ),
           new ListTile(
             subtitle: new TextFormField(

@@ -22,6 +22,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('ScanIt'),
+        centerTitle: true,
+
       ),
       body: FutureBuilder<List>(
         future: Services.getEntries(),
